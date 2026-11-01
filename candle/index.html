@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#100e19">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Magic Candle">
+
+<title>Velitas 🕯️</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 48%, #493044 0%, #21182c 45%, #100e19 100%);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h1 {
+  position: absolute;
+  top: 9%;
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  position: absolute;
+  top: 17%;
+  color: #c8b8ca;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 330px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Candle */
+
+.candle {
+  position: relative;
+  width: 76px;
+  height: 180px;
+  border-radius: 9px 9px 6px 6px;
+  background:
+    linear-gradient(
+      90deg,
+      #9c574c,
+      #e8ae87 28%,
+      #ffe0b5 52%,
+      #d78c69 100%
+    );
+  box-shadow:
+    0 10px 30px #0005,
+    inset -5px 0 10px #a45b4533;
+  z-index: 2;
+}
+
+.candle::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 100%;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffe7c7;
+}
+
+.wick {
+  position: absolute;
+  top: -17px;
+  left: 36px;
+  width: 4px;
+  height: 17px;
+  background: #39251d;
+  border-radius: 3px;
+  z-index: 3;
+}
+
+/* Flame */
+
+.flame {
+  position: absolute;
+  width: 38px;
+  height: 65px;
+  top: -78px;
+  left: 19px;
+  transform-origin: 50% 90%;
+  border-radius: 50% 50% 35% 35%;
+  background:
+    radial-gradient(
+      ellipse at 50% 75%,
+      #fffbd0 0%,
+      #ffe36d 25%,
+      #ffad27 55%,
+      #ff641b 80%,
+      transparent 100%
+    );
+  filter: drop-shadow(0 0 15px #ffac36);
+  animation: flicker .15s infinite alternate;
+  transition: opacity .5s, transform .5s;
+}
+
+.flame::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 31px;
+  left: 12px;
+  top: 25px;
+  border-radius: 50%;
+  background: #fff8c9;
+  filter: blur(2px);
+}
+
+@keyframes flicker {
+  0% {
+    transform: rotate(-4deg) scale(.95, 1.04);
+  }
+  100% {
+    transform: rotate(4deg) scale(1.05, .96);
+  }
+}
+
+.flame.off {
+  opacity: 0;
+  transform: scale(.2, 0);
+  animation: none;
+}
+
+/* Smoke */
+
+.smoke {
+  position: absolute;
+  top: -40px;
+  left: 28px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #dddce5;
+  filter: blur(7px);
+  opacity: 0;
+}
+
+.smoke.animate {
+  animation: smoke 2.8s ease-out forwards;
+}
+
+@keyframes smoke {
+  0% {
+    opacity: .7;
+    transform: translate(0, 0) scale(.4);
+  }
+  40% {
+    opacity: .4;
+    transform: translate(-10px, -45px) scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(15px, -120px) scale(3);
+  }
+}
+
+/* Light */
+
+.glow {
+  position: absolute;
+  bottom: 5px;
+  width: 190px;
+  height: 55px;
+  border-radius: 50%;
+  background: #ff9b38;
+  filter: blur(45px);
+  opacity: .4;
+  transition: opacity .7s;
+}
+
+.glow.off {
+  opacity: 0;
+}
+
+/* Controls */
+
+.controls {
+  position: absolute;
+  bottom: 9%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+}
+
+button {
+  border: 1px solid #f5c995;
+  border-radius: 40px;
+  padding: 17px 34px;
+  background: linear-gradient(135deg, #f8d4a5, #e6a86e);
+  color: #281b22;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 25px #f0a35c33;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+button:disabled {
+  opacity: .65;
+}
+
+#status {
+  font-size: 14px;
+  color: #e2cfdf;
+  text-align: center;
+  min-height: 22px;
+}
+
+.meter {
+  width: 160px;
+  height: 4px;
+  border-radius: 5px;
+  background: #ffffff22;
+  overflow: hidden;
+}
+
+#level {
+  height: 100%;
+  width: 0%;
+  background: #ffd18c;
+  transition: width .08s;
+}
+
+.hint {
+  color: #a99aaf;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Make a wish ✨</h1>
+<div class="subtitle">A LITTLE MAGIC FOR YOU</div>
+
+<div class="scene">
+
+  <div class="glow" id="glow"></div>
+
+  <div class="candle">
+
+    <div class="wick"></div>
+
+    <div class="flame" id="flame"></div>
+
+    <div class="smoke" id="smoke"></div>
+
+  </div>
+
+</div>
+
+<div class="controls">
+
+  <button id="micButton">
+    🎤 Enable microphone
+  </button>
+
+  <div id="status">
+    Close your eyes, make a wish and blow!
+  </div>
+
+  <div class="meter">
+    <div id="level"></div>
+  </div>
+
+  <div class="hint">
+    BLOW INTO YOUR MICROPHONE
+  </div>
+
+</div>
+
+<script>
+const flame = document.getElementById("flame");
+const smoke = document.getElementById("smoke");
+const glow = document.getElementById("glow");
+const button = document.getElementById("micButton");
+const status = document.getElementById("status");
+const level = document.getElementById("level");
+
+let audioContext = null;
+let stream = null;
+let analyser = null;
+let animationId = null;
+let blowingSince = null;
+let extinguished = false;
+let starting = false;
+
+// Microphone initialization
+
+async function enableMic() {
+
+  if (starting) return;
+
+  starting = true;
+  button.disabled = true;
+
+  try {
+
+    status.textContent = "Requesting microphone permission...";
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+
+      throw new Error(
+        "Microphone unavailable. Open this page using localhost or HTTPS."
+      );
+    }
+
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
+      }
+    });
+
+    audioContext = new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+    await audioContext.resume();
+
+    const source =
+      audioContext.createMediaStreamSource(stream);
+
+    const filter = audioContext.createBiquadFilter();
+
+    filter.type = "highpass";
+    filter.frequency.value = 350;
+
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.25;
+
+    source.connect(filter);
+    filter.connect(analyser);
+
+    status.textContent = "Microphone active! Blow! 💨";
+
+    button.textContent = "🎤 Listening...";
+    button.disabled = false;
+
+    starting = false;
+
+    listen();
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.textContent =
+      error.name + ": " + error.message;
+
+    button.textContent = "🎤 Try again";
+    button.disabled = false;
+
+    starting = false;
+
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    if (audioContext) {
+      await audioContext.close();
+      audioContext = null;
+    }
+  }
+}
+
+// Listen for blowing
+
+function listen() {
+
+  const data = new Float32Array(analyser.fftSize);
+
+  // Adjust this threshold if necessary.
+  const BLOW_THRESHOLD = 0.055;
+
+  // Require a sustained breath.
+  const BLOW_DURATION = 350;
+
+  function checkSound() {
+
+    if (extinguished || !analyser) return;
+
+    analyser.getFloatTimeDomainData(data);
+
+    let sum = 0;
+
+    for (let i = 0; i < data.length; i++) {
+      sum += data[i] * data[i];
+    }
+
+    const volume = Math.sqrt(sum / data.length);
+
+    // Update visual microphone meter.
+    level.style.width =
+      Math.min(100, volume * 900) + "%";
+
+    if (volume > BLOW_THRESHOLD) {
+
+      if (blowingSince === null) {
+        blowingSince = performance.now();
+      }
+
+      if (
+        performance.now() - blowingSince >
+        BLOW_DURATION
+      ) {
+        blowOut();
+        return;
+      }
+
+    } else {
+
+      blowingSince = null;
+
+    }
+
+    animationId = requestAnimationFrame(checkSound);
+  }
+
+  checkSound();
+}
+
+// Extinguish candle
+
+function blowOut() {
+
+  if (extinguished) return;
+
+  extinguished = true;
+
+  cancelAnimationFrame(animationId);
+
+  flame.classList.add("off");
+  glow.classList.add("off");
+
+  smoke.classList.remove("animate");
+
+  // Restart smoke animation.
+  void smoke.offsetWidth;
+
+  smoke.classList.add("animate");
+
+  status.textContent =
+    "Your wish is on its way... ✨";
+
+  button.textContent = "🕯️ Light again";
+
+  button.disabled = false;
+
+  level.style.width = "0%";
+
+  stopMicrophone();
+}
+
+// Stop microphone safely
+
+function stopMicrophone() {
+
+  if (stream) {
+
+    stream.getTracks().forEach(track => {
+      track.stop();
+    });
+
+    stream = null;
+  }
+
+  if (audioContext) {
+
+    audioContext.close();
+
+    audioContext = null;
+  }
+
+  analyser = null;
+}
+
+// Relight candle
+
+function relight() {
+
+  extinguished = false;
+  blowingSince = null;
+
+  flame.classList.remove("off");
+  glow.classList.remove("off");
+  smoke.classList.remove("animate");
+
+  button.textContent = "🎤 Enable microphone";
+
+  status.textContent =
+    "Make another wish! ✨";
+}
+
+// Button interaction
+
+button.addEventListener("click", async () => {
+
+  if (starting) return;
+
+  if (extinguished) {
+
+    relight();
+
+  } else if (!stream) {
+
+    await enableMic();
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
