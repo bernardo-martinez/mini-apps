@@ -3,12 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#100e19">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Magic Candle">
-
+<meta name="apple-mobile-web-app-title" content="Velitas">
 <title>Velitas 🕯️</title>
 
 <style>
@@ -21,32 +20,40 @@ body {
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  overflow: hidden;
+  padding: max(25px, env(safe-area-inset-top)) 20px
+           max(25px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 48%, #493044 0%, #21182c 45%, #100e19 100%);
-  color: #fff;
+    radial-gradient(
+      ellipse at 50% 48%,
+      #493044 0%,
+      #21182c 48%,
+      #100e19 100%
+    );
+  color: white;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 h1 {
-  position: absolute;
-  top: 9%;
-  font-size: 27px;
+  margin: 0 0 9px;
+  font-size: 28px;
   font-weight: 400;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
+  text-align: center;
 }
 
 .subtitle {
-  position: absolute;
-  top: 17%;
   color: #c8b8ca;
-  font-size: 13px;
-  letter-spacing: 1px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-align: center;
 }
+
+/* Candle scene */
 
 .scene {
   position: relative;
@@ -55,27 +62,27 @@ h1 {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  margin-top: 35px;
+  margin-bottom: 20px;
 }
-
-/* Candle */
 
 .candle {
   position: relative;
   width: 76px;
   height: 180px;
   border-radius: 9px 9px 6px 6px;
-  background:
-    linear-gradient(
-      90deg,
-      #9c574c,
-      #e8ae87 28%,
-      #ffe0b5 52%,
-      #d78c69 100%
-    );
+  background: linear-gradient(
+    90deg,
+    #9c574c,
+    #e8ae87 28%,
+    #ffe0b5 52%,
+    #d78c69 100%
+  );
   box-shadow:
     0 10px 30px #0005,
     inset -5px 0 10px #a45b4533;
   z-index: 2;
+  cursor: pointer;
 }
 
 .candle::before {
@@ -103,6 +110,8 @@ h1 {
 /* Flame */
 
 .flame {
+  --lean: 0deg;
+
   position: absolute;
   width: 38px;
   height: 65px;
@@ -110,18 +119,19 @@ h1 {
   left: 19px;
   transform-origin: 50% 90%;
   border-radius: 50% 50% 35% 35%;
-  background:
-    radial-gradient(
-      ellipse at 50% 75%,
-      #fffbd0 0%,
-      #ffe36d 25%,
-      #ffad27 55%,
-      #ff641b 80%,
-      transparent 100%
-    );
+  background: radial-gradient(
+    ellipse at 50% 75%,
+    #fffbd0 0%,
+    #ffe36d 25%,
+    #ffad27 55%,
+    #ff641b 80%,
+    transparent 100%
+  );
   filter: drop-shadow(0 0 15px #ffac36);
   animation: flicker .15s infinite alternate;
-  transition: opacity .5s, transform .5s;
+  transition:
+    opacity .55s,
+    filter .3s;
 }
 
 .flame::after {
@@ -138,16 +148,21 @@ h1 {
 
 @keyframes flicker {
   0% {
-    transform: rotate(-4deg) scale(.95, 1.04);
+    transform:
+      rotate(calc(var(--lean) - 4deg))
+      scale(.95, 1.04);
   }
+
   100% {
-    transform: rotate(4deg) scale(1.05, .96);
+    transform:
+      rotate(calc(var(--lean) + 4deg))
+      scale(1.05, .96);
   }
 }
 
 .flame.off {
   opacity: 0;
-  transform: scale(.2, 0);
+  filter: none;
   animation: none;
 }
 
@@ -163,6 +178,7 @@ h1 {
   background: #dddce5;
   filter: blur(7px);
   opacity: 0;
+  pointer-events: none;
 }
 
 .smoke.animate {
@@ -174,17 +190,19 @@ h1 {
     opacity: .7;
     transform: translate(0, 0) scale(.4);
   }
+
   40% {
     opacity: .4;
     transform: translate(-10px, -45px) scale(1.8);
   }
+
   100% {
     opacity: 0;
     transform: translate(15px, -120px) scale(3);
   }
 }
 
-/* Light */
+/* Candle glow */
 
 .glow {
   position: absolute;
@@ -202,48 +220,46 @@ h1 {
   opacity: 0;
 }
 
-/* Controls */
+/* Small microphone control */
 
 .controls {
-  position: absolute;
-  bottom: 9%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-  padding: 20px;
+  gap: 12px;
 }
 
-button {
-  border: 1px solid #f5c995;
-  border-radius: 40px;
-  padding: 17px 34px;
-  background: linear-gradient(135deg, #f8d4a5, #e6a86e);
-  color: #281b22;
-  font-size: 16px;
-  font-weight: 600;
+.mic-setting {
+  border: none;
+  background: transparent;
+  color: #b9a9c5;
+  box-shadow: none;
+  padding: 9px 15px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .5px;
+  opacity: .8;
   cursor: pointer;
-  box-shadow: 0 5px 25px #f0a35c33;
 }
 
-button:active {
-  transform: scale(.96);
+.mic-setting:active {
+  transform: scale(.97);
 }
 
-button:disabled {
-  opacity: .65;
+.mic-setting:disabled {
+  opacity: .45;
 }
 
 #status {
-  font-size: 14px;
+  font-size: 13px;
   color: #e2cfdf;
   text-align: center;
-  min-height: 22px;
+  min-height: 20px;
 }
 
 .meter {
-  width: 160px;
+  width: 130px;
   height: 4px;
   border-radius: 5px;
   background: #ffffff22;
@@ -259,9 +275,22 @@ button:disabled {
 
 .hint {
   color: #a99aaf;
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-align: center;
 }
+
+@media (max-height: 700px) {
+  .scene {
+    height: 265px;
+    margin-top: 15px;
+  }
+
+  .candle {
+    height: 155px;
+  }
+}
+
 </style>
 </head>
 
@@ -274,23 +303,15 @@ button:disabled {
 
   <div class="glow" id="glow"></div>
 
-  <div class="candle">
-
+  <div class="candle" id="candle">
     <div class="wick"></div>
-
     <div class="flame" id="flame"></div>
-
     <div class="smoke" id="smoke"></div>
-
   </div>
 
 </div>
 
 <div class="controls">
-
-  <button id="micButton">
-    🎤 Enable microphone
-  </button>
 
   <div id="status">
     Close your eyes, make a wish and blow!
@@ -301,15 +322,21 @@ button:disabled {
   </div>
 
   <div class="hint">
-    BLOW INTO YOUR MICROPHONE
+    BLOW TO EXTINGUISH
   </div>
+
+  <button id="micButton" class="mic-setting">
+    🎤 Enable microphone
+  </button>
 
 </div>
 
 <script>
+
 const flame = document.getElementById("flame");
 const smoke = document.getElementById("smoke");
 const glow = document.getElementById("glow");
+const candle = document.getElementById("candle");
 const button = document.getElementById("micButton");
 const status = document.getElementById("status");
 const level = document.getElementById("level");
@@ -318,18 +345,30 @@ let audioContext = null;
 let stream = null;
 let analyser = null;
 let animationId = null;
+
 let blowingSince = null;
+let noiseFloor = 0.008;
+
 let extinguished = false;
 let starting = false;
+let listening = false;
 
-// Microphone initialization
+let micSession = 0;
+let calibrationStart = 0;
+
+
+// --------------------------------
+// ENABLE MICROPHONE
+// --------------------------------
 
 async function enableMic() {
 
-  if (starting) return;
+  if (starting || listening || extinguished) return;
 
   starting = true;
   button.disabled = true;
+
+  const thisSession = ++micSession;
 
   try {
 
@@ -338,18 +377,27 @@ async function enableMic() {
     if (!navigator.mediaDevices ||
         !navigator.mediaDevices.getUserMedia) {
 
-      throw new Error(
-        "Microphone unavailable. Open this page using localhost or HTTPS."
-      );
+      throw new Error("Microphone requires HTTPS.");
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false
-      }
-    });
+    const newStream =
+      await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false
+        }
+      });
+
+    if (thisSession !== micSession || document.hidden) {
+
+      newStream.getTracks().forEach(track => track.stop());
+
+      starting = false;
+      return;
+    }
+
+    stream = newStream;
 
     audioContext = new (
       window.AudioContext ||
@@ -358,27 +406,40 @@ async function enableMic() {
 
     await audioContext.resume();
 
+    if (thisSession !== micSession || document.hidden) {
+
+      stopMicrophone();
+      starting = false;
+      return;
+    }
+
     const source =
       audioContext.createMediaStreamSource(stream);
 
     const filter = audioContext.createBiquadFilter();
 
     filter.type = "highpass";
-    filter.frequency.value = 350;
+    filter.frequency.value = 250;
 
     analyser = audioContext.createAnalyser();
+
     analyser.fftSize = 2048;
-    analyser.smoothingTimeConstant = 0.25;
+    analyser.smoothingTimeConstant = 0.2;
 
     source.connect(filter);
     filter.connect(analyser);
 
-    status.textContent = "Microphone active! Blow! 💨";
+    noiseFloor = 0.008;
+    blowingSince = null;
+    calibrationStart = performance.now();
 
-    button.textContent = "🎤 Listening...";
-    button.disabled = false;
-
+    listening = true;
     starting = false;
+
+    status.textContent = "Listening! Make a wish and blow 💨";
+
+    button.textContent = "✓ Microphone enabled";
+    button.disabled = false;
 
     listen();
 
@@ -386,41 +447,40 @@ async function enableMic() {
 
     console.error(error);
 
-    status.textContent =
-      error.name + ": " + error.message;
+    if (thisSession === micSession) {
 
-    button.textContent = "🎤 Try again";
-    button.disabled = false;
+      status.textContent =
+        error.name + ": " + error.message;
+
+      button.textContent = "🎤 Try again";
+      button.disabled = false;
+
+      stopMicrophone();
+    }
 
     starting = false;
-
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      stream = null;
-    }
-
-    if (audioContext) {
-      await audioContext.close();
-      audioContext = null;
-    }
   }
 }
 
-// Listen for blowing
+
+// --------------------------------
+// LISTEN FOR BREATH
+// --------------------------------
 
 function listen() {
 
+  if (!analyser || !listening || extinguished) return;
+
   const data = new Float32Array(analyser.fftSize);
 
-  // Adjust this threshold if necessary.
-  const BLOW_THRESHOLD = 0.055;
-
-  // Require a sustained breath.
-  const BLOW_DURATION = 350;
+  // Sensitivity settings
+  const MIN_BLOW_LEVEL = 0.018;
+  const BLOW_MULTIPLIER = 1.8;
+  const BLOW_DURATION = 120;
 
   function checkSound() {
 
-    if (extinguished || !analyser) return;
+    if (!analyser || !listening || extinguished) return;
 
     analyser.getFloatTimeDomainData(data);
 
@@ -432,28 +492,58 @@ function listen() {
 
     const volume = Math.sqrt(sum / data.length);
 
-    // Update visual microphone meter.
+    const now = performance.now();
+
+    // Microphone meter
     level.style.width =
-      Math.min(100, volume * 900) + "%";
+      Math.min(100, volume * 1000) + "%";
 
-    if (volume > BLOW_THRESHOLD) {
+    // Learn background noise gradually
+    if (volume < Math.max(MIN_BLOW_LEVEL, noiseFloor * 2)) {
 
-      if (blowingSince === null) {
-        blowingSince = performance.now();
+      noiseFloor =
+        noiseFloor * 0.97 + volume * 0.03;
+    }
+
+    const threshold = Math.max(
+      MIN_BLOW_LEVEL,
+      noiseFloor * BLOW_MULTIPLIER
+    );
+
+    // Lean flame according to breath strength
+    const strength = Math.max(
+      0,
+      Math.min(1, (volume - threshold) / 0.09)
+    );
+
+    const lean = strength * 32;
+
+    flame.style.setProperty(
+      "--lean",
+      lean.toFixed(1) + "deg"
+    );
+
+    // Allow microphone to settle before detection
+    if (now - calibrationStart > 500) {
+
+      if (volume > threshold) {
+
+        if (blowingSince === null) {
+          blowingSince = now;
+        }
+
+        if (now - blowingSince >= BLOW_DURATION) {
+
+          blowOut();
+          return;
+        }
+
+      } else {
+
+        blowingSince = null;
+        flame.style.setProperty("--lean", "0deg");
+
       }
-
-      if (
-        performance.now() - blowingSince >
-        BLOW_DURATION
-      ) {
-        blowOut();
-        return;
-      }
-
-    } else {
-
-      blowingSince = null;
-
     }
 
     animationId = requestAnimationFrame(checkSound);
@@ -462,7 +552,10 @@ function listen() {
   checkSound();
 }
 
-// Extinguish candle
+
+// --------------------------------
+// EXTINGUISH CANDLE
+// --------------------------------
 
 function blowOut() {
 
@@ -470,14 +563,12 @@ function blowOut() {
 
   extinguished = true;
 
-  cancelAnimationFrame(animationId);
-
   flame.classList.add("off");
   glow.classList.add("off");
 
   smoke.classList.remove("animate");
 
-  // Restart smoke animation.
+  // Restart smoke animation
   void smoke.offsetWidth;
 
   smoke.classList.add("animate");
@@ -485,70 +576,187 @@ function blowOut() {
   status.textContent =
     "Your wish is on its way... ✨";
 
-  button.textContent = "🕯️ Light again";
-
-  button.disabled = false;
-
   level.style.width = "0%";
 
-  stopMicrophone();
+  // IMPORTANT:
+  // Do not stop the microphone here.
+  // It stays enabled for the next wish.
+
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
 }
 
-// Stop microphone safely
 
-function stopMicrophone() {
+// --------------------------------
+// RELIGHT CANDLE
+// --------------------------------
 
-  if (stream) {
+async function relight() {
 
-    stream.getTracks().forEach(track => {
-      track.stop();
-    });
-
-    stream = null;
-  }
-
-  if (audioContext) {
-
-    audioContext.close();
-
-    audioContext = null;
-  }
-
-  analyser = null;
-}
-
-// Relight candle
-
-function relight() {
+  if (!extinguished) return;
 
   extinguished = false;
-  blowingSince = null;
 
   flame.classList.remove("off");
   glow.classList.remove("off");
   smoke.classList.remove("animate");
 
-  button.textContent = "🎤 Enable microphone";
+  flame.style.setProperty("--lean", "0deg");
 
-  status.textContent =
-    "Make another wish! ✨";
+  if (stream && analyser && audioContext) {
+
+    try {
+
+      if (audioContext.state !== "running") {
+        await audioContext.resume();
+      }
+
+      if (document.hidden || extinguished) return;
+
+      listening = true;
+      blowingSince = null;
+      calibrationStart = performance.now();
+
+      status.textContent = "Make another wish! Blow! 💨";
+
+      listen();
+
+    } catch (error) {
+
+      console.error(error);
+
+      status.textContent =
+        "Tap the microphone setting to reconnect.";
+
+    }
+
+  } else {
+
+    status.textContent = "Make another wish! ✨";
+
+  }
 }
 
-// Button interaction
+
+// --------------------------------
+// STOP MICROPHONE
+// --------------------------------
+
+function stopMicrophone() {
+
+  micSession++;
+
+  if (animationId !== null) {
+
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  if (stream) {
+
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
+
+  if (audioContext) {
+
+    const oldContext = audioContext;
+    audioContext = null;
+
+    oldContext.close().catch(console.error);
+  }
+
+  analyser = null;
+  listening = false;
+  blowingSince = null;
+
+  level.style.width = "0%";
+
+  flame.style.setProperty("--lean", "0deg");
+}
+
+
+// --------------------------------
+// MICROPHONE BUTTON
+// --------------------------------
 
 button.addEventListener("click", async () => {
 
   if (starting) return;
 
+  if (listening) {
+
+    stopMicrophone();
+
+    button.textContent = "🎤 Enable microphone";
+
+    status.textContent =
+      "Microphone turned off.";
+
+    return;
+  }
+
   if (extinguished) {
 
-    relight();
+    await relight();
+    return;
+  }
 
-  } else if (!stream) {
+  if (!stream) {
 
     await enableMic();
+  }
+
+});
+
+
+// --------------------------------
+// TAP CANDLE TO RELIGHT
+// --------------------------------
+
+candle.addEventListener("click", () => {
+
+  if (extinguished) {
+    relight();
+  }
+
+});
+
+
+// --------------------------------
+// STOP MIC WHEN LEAVING APP
+// --------------------------------
+
+function handlePageHidden() {
+
+  if (document.hidden) {
+
+    stopMicrophone();
+
+    starting = false;
+
+    if (!extinguished) {
+
+      button.textContent = "🎤 Enable microphone";
+
+      status.textContent =
+        "Microphone paused. Welcome back! ✨";
+    }
 
   }
+}
+
+document.addEventListener(
+  "visibilitychange",
+  handlePageHidden
+);
+
+window.addEventListener("pagehide", () => {
+
+  stopMicrophone();
+  starting = false;
 
 });
 
