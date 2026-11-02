@@ -418,8 +418,6 @@ async function enableMic() {
     listening = true;
     starting = false;
 
-    status.textContent = "Listening! Make a wish and blow 💨";
-
     button.textContent = "✓ Microphone enabled";
     button.disabled = false;
 
@@ -555,9 +553,6 @@ function blowOut() {
 
   smoke.classList.add("animate");
 
-  status.textContent =
-    "Your wish is on its way... ✨";
-
   level.style.width = "0%";
 
   // IMPORTANT:
@@ -601,7 +596,6 @@ async function relight() {
       blowingSince = null;
       calibrationStart = performance.now();
 
-      status.textContent = "Make another wish! Blow! 💨";
 
       listen();
 
@@ -616,7 +610,7 @@ async function relight() {
 
   } else {
 
-    status.textContent = "Make another wish! ✨";
+    status.textContent = "";
 
   }
 }
