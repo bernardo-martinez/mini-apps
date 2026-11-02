@@ -354,7 +354,7 @@ async function enableMic() {
 
   try {
 
-    status.textContent = "Requesting microphone permission...";
+    status.textContent = "";
 
     if (!navigator.mediaDevices ||
         !navigator.mediaDevices.getUserMedia) {
